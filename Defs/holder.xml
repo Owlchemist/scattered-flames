@@ -1,0 +1,16 @@
+﻿
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+	<ThingDef>
+		<defName>Owl_DummyHolder</defName>
+		<label>Fire</label>
+		<description>...</description>
+		<thingClass>ThingWithComps</thingClass>
+		<statBases>
+			<MarketValue>0</MarketValue>
+		</statBases>
+		<destroyOnDrop>True</destroyOnDrop>
+		<tradeability>None</tradeability>
+		<isSaveable>false</isSaveable>
+	</ThingDef>
+</Defs>

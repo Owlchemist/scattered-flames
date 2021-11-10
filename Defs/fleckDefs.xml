@@ -1,0 +1,13 @@
+<Defs>
+	<FleckDef ParentName="FleckBase_Thrown">
+		<defName>Owl_FireGlow</defName>
+		<graphicData>
+			<texPath>Things/Mote/FireGlow</texPath>
+			<shaderType>MoteGlow</shaderType>
+		</graphicData>
+		<altitudeLayer>MoteOverhead</altitudeLayer>
+		<fadeInTime>0.75</fadeInTime>
+		<solidTime>1.08</solidTime>
+		<fadeOutTime>0.8</fadeOutTime>
+	</FleckDef>
+</Defs>
