@@ -14,7 +14,7 @@ namespace ScatteredFlames
 
 		public override void DrawWorker(Vector3 loc, Rot4 rot, ThingDef thingDef, Thing thing, float extraRotation)
 		{
-			if (this.subGraphics == null || !fireCache.TryGetValue(thing, out SubFlame subFlame)) return;
+			if (this.subGraphics == null || !fireCache.TryGetValue(thing, out FlameData subFlame)) return;
 
 			if (!Current.gameInt.tickManager.Paused)
 			{
@@ -28,11 +28,12 @@ namespace ScatteredFlames
 					}
 				}
 
-				if (fireSize > 0.5f)
+				if (ModSettings_ScatteredFlames.specialFX && !subFlame.roofed && fireSize > 0.5f)
 				{
 					if (fastRandom.Next(100) < 2) FleckMaker.ThrowMicroSparks(loc, thing.Map);
-					if (fastRandom.Next(100) < 1) ThrowLongFireGlow(loc, thing.Map, fireSize);
-					if (fastRandom.Next(100) < 1) FleckMaker.ThrowDustPuffThick(loc, thing.Map, fireSize * 2f, Color.yellow);
+					if (fastRandom.Next(200) < 1) ThrowLongFireGlow(loc, thing.Map, fireSize);
+					if (fastRandom.Next(1000) < 1) FleckMaker.ThrowHeatGlow(thing.Position, thing.Map, fireSize);
+					if (fastRandom.Next(100) < 1) FleckMaker.ThrowDustPuffThick(loc, thing.Map, fireSize * 2f, ResourceBank.color);
 				}
 			}
 

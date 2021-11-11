@@ -18,14 +18,21 @@ namespace ScatteredFlames
 		{
 			Listing_Standard options = new Listing_Standard();
 			options.Begin(inRect);
+			options.Label("ScatteredFlames.Settings.DisableAll".Translate());
+			options.Gap();
+			options.Label("ScatteredFlames.Settings.Header.Graphics".Translate());
+			options.GapLine(); //======================================
 			options.CheckboxLabeled("ScatteredFlames.Settings.MultiFlames".Translate(), ref multiFlames, "ScatteredFlames.Settings.MultiFlames.Desc".Translate());
+			options.CheckboxLabeled("ScatteredFlames.Settings.SpecialFX".Translate(), ref specialFX, "ScatteredFlames.Settings.SpecialFX.Desc".Translate());
 			if (ScatteredFlamesUtility.smokeInstalled) options.CheckboxLabeled("ScatteredFlames.Settings.Smoke".Translate(), ref smoke, "ScatteredFlames.Settings.Smoke.Desc".Translate());
 			else 
 			{
 				smoke = false;
 				options.CheckboxLabeled("ScatteredFlames.Settings.Smoke".Translate().Colorize(Color.gray), ref smoke, "ScatteredFlames.Settings.Smoke.Desc".Translate());
 			}
-			//options.CheckboxLabeled("ScatteredFlames.Settings.Light".Translate(), ref light, "ScatteredFlames.Settings.Light.Desc".Translate());
+			options.Gap();
+			options.Label("ScatteredFlames.Settings.Header.Misc".Translate());
+			options.GapLine(); //======================================
 			options.CheckboxLabeled("ScatteredFlames.Settings.FireWatcher".Translate(), ref disableFireWatcher, "ScatteredFlames.Settings.FireWatcher.Desc".Translate());
 			options.End();
 			base.DoSettingsWindowContents(inRect);
@@ -48,15 +55,15 @@ namespace ScatteredFlames
 		public override void ExposeData()
 		{
 			Scribe_Values.Look<bool>(ref multiFlames, "multiFlames", true, false);
+			Scribe_Values.Look<bool>(ref specialFX, "specialFX", true, false);
 			Scribe_Values.Look<bool>(ref smoke, "smoke", true, false);
-			//Scribe_Values.Look<bool>(ref light, "light", false, false);
 			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher", false, false);
 			base.ExposeData();
 		}
 
 		public static bool multiFlames = true;
 		public static bool smoke = true;
-		//public static bool light = false;
+		public static bool specialFX = true;
 		public static bool disableFireWatcher = false;
 	}
 }

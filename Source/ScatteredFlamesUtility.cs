@@ -9,11 +9,9 @@ namespace ScatteredFlames
 {
 	public static class ScatteredFlamesUtility
 	{
-		public static Dictionary<Thing, SubFlame> fireCache = new Dictionary<Thing, SubFlame>();
+		public static Dictionary<Thing, FlameData> fireCache = new Dictionary<Thing, FlameData>();
 		public static bool nextFrame, flickerNow, smokeInstalled;
 		private static Vector3 centering = new Vector3(0.5f, 0, 0.5f);
-		//public static float radiusCache;
-		//public static ColorInt colorCache;
 		static DefModExtension backup;
 		public static FastRandom fastRandom;
 
@@ -21,13 +19,6 @@ namespace ScatteredFlames
 		{
 			fastRandom = new FastRandom();
 			var fire = DefDatabase<ThingDef>.GetNamed("Fire");
-			/*
-			if (fire.HasModExtension<Firelight>())
-			{
-				radiusCache = fire.GetModExtension<Firelight>().glowRadius;
-				colorCache = fire.GetModExtension<Firelight>().glowColor * 0.9f;
-			}
-			*/
 
             smokeInstalled = LoadedModManager.RunningMods.Any(x => x.Name == "Simple FX: Smoke");
 
@@ -38,7 +29,7 @@ namespace ScatteredFlames
 				backup = fire.modExtensions.FirstOrDefault(x => x.GetType().Name == "Flecker");
 				if (backup != null && fire.modExtensions.Remove(backup)) restartNeeded = true;
 			}
-			else if (fire.modExtensions.FirstOrDefault(x => x.GetType().Name == "Flecker") == null)
+			else if (fire.modExtensions.FirstOrDefault(x => x.GetType().Name == "Flecker") == null && backup != null)
 			{
 				fire.modExtensions.Add(backup);
 				restartNeeded = true;
@@ -50,38 +41,10 @@ namespace ScatteredFlames
 				Find.WindowStack.Add(new Dialog_MessageBox("ScatteredFlames.ReloadRequired".Translate(), null, null, null, null, "ScatteredFlames.ReloadHeader".Translate(), true, null, null, WindowLayer.Dialog));
 			}
 		}
-		/*
-		public static void UpdateLights(Thing key, SubFlame value)
+
+		public class FlameData
 		{
-			foreach (IntVec3 cell in value.adjacentCells)
-			{
-				if (fireCache.FirstOrDefault(x => x.Key.Position == cell).Value?.glowHolder != null) return;
-			}
-
-			//Make glower
-			value.firelight = new CompGlower();
-			value.firelight.props = new CompProperties_Glower()
-			{ 
-				glowRadius = radiusCache,
-				glowColor = colorCache
-			};
-			value.firelight.glowOnInt = true;
-
-			//Setup dummy holder
-			value.glowHolder = new ThingWithComps();
-			value.glowHolder.def = ResourceBank.ThingDefOf.Owl_DummyHolder;
-			value.glowHolder.Position = key.Position;
-			value.firelight.parent = value.glowHolder;
-
-			//Update glow grid now
-			key.Map.mapDrawer.MapMeshDirty(key.Position, MapMeshFlag.Things);
-			key.Map.glowGrid.RegisterGlower(value.firelight);	
-		}
-		*/
-
-		public class SubFlame
-		{
-			public SubFlame(Fire fire)
+			public FlameData(Fire fire)
 			{
 				//Determine starting frame
 				frame = Random.Range(0, 3);
@@ -111,11 +74,8 @@ namespace ScatteredFlames
 					matrix[i].SetTRS(new Vector3(offsets[i].x, fire.Position.ToVector3ShiftedWithAltitude(AltitudeLayer.PawnState).y, offsets[i].z), Quaternion.identity, new Vector3(fire.fireSize, 1f, fire.fireSize));
 				}
 
-				//Cache cells
-				//adjacentCells = fire.OccupiedRect().ExpandedBy(2).ToArray();
-				
-				//Lights
-				//if (light) UpdateLights(fire, this);
+				//Roofed?
+				roofed = fire.Map.roofGrid.Roofed(fire.Position);
 			}
 			
 			public int frame;
@@ -123,9 +83,7 @@ namespace ScatteredFlames
 			public int numOfOffsets;
 			public Matrix4x4[] matrix;
 			public float maxFireSize;
-			//public CompGlower firelight;
-			//public ThingWithComps glowHolder;
-			//public IntVec3[] adjacentCells;
+			public bool roofed;
 		}
 	
 		public static void ThrowLongFireGlow(Vector3 c, Map map, float size)
@@ -135,10 +93,11 @@ namespace ScatteredFlames
 			Vector3 vector = c + size * new Vector3(fastRandom.Next(1, 100) / 100f - 0.5f, 0f, fastRandom.Next(1, 100) / 100f - 0.5f);
 			if (!vector.InBounds(map)) return;
 
-			FleckCreationData dataStatic = FleckMaker.GetDataStatic(vector, map, ResourceBank.FleckDefOf.Owl_FireGlow, fastRandom.Next(400, 600) / 100f * size);
+			FleckCreationData dataStatic = FleckMaker.GetDataStatic(vector, map, ResourceBank.FleckDefOf.Owl_LongFireGlow, fastRandom.Next(400, 600) / 100f * size);
 			dataStatic.rotationRate = fastRandom.Next(-300, 300) / 100f;
 			dataStatic.velocityAngle = fastRandom.Next(0, 360) / 100f;
 			dataStatic.velocitySpeed = 0.12f;
+			dataStatic.def.graphicData.color *= 0.5f;
 			map.flecks.CreateFleck(dataStatic);
 		}
 	}

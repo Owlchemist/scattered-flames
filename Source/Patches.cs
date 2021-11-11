@@ -11,7 +11,7 @@ namespace ScatteredFlames
     {
         static void Postfix(Fire __instance)
         {
-			fireCache.Add(__instance, new SubFlame(__instance));
+			fireCache.Add(__instance, new FlameData(__instance));
         }
     }
 
@@ -20,14 +20,6 @@ namespace ScatteredFlames
     {
         static void Prefix(Fire __instance)
         {
-            /*
-            if (fireCache.TryGetValue(__instance, out SubFlame subFlame) && subFlame.firelight != null)
-            {
-                __instance.Map.mapDrawer.MapMeshDirty(__instance.Position, MapMeshFlag.Things);
-                __instance.Map.glowGrid.DeRegisterGlower(subFlame.firelight);
-            }
-            UpdateLights(__instance, fireCache.TryGetValue(__instance));
-            */
             fireCache.Remove(__instance);
         }
     }
