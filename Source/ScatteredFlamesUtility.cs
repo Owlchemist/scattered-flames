@@ -47,10 +47,10 @@ namespace ScatteredFlames
 			public FlameData(Fire fire)
 			{
 				//Determine starting frame
-				frame = Random.Range(0, 3);
+				frame = fastRandom.Next(0,3);
 
 				//Determine if multiflame or not
-				numOfOffsets = multiFlames ? Random.Range(1, 3) : 1;
+				numOfOffsets = multiFlames ? fastRandom.Next(1,3) : 1;
 
 				//Determine offsets
 				offsets = new Vector3[numOfOffsets];
