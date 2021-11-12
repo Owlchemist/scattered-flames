@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
-	<ScatteredFlames.Settings.DisableAll>Disable all these features if you just high performance vanilla fire.</ScatteredFlames.Settings.DisableAll>
+	<ScatteredFlames.Settings.DisableAll>Disable all these features if you just want high performance vanilla fire.</ScatteredFlames.Settings.DisableAll>
 	
 	<ScatteredFlames.Settings.MultiFlames>Enable multi-flame graphics</ScatteredFlames.Settings.MultiFlames>
 	<ScatteredFlames.Settings.MultiFlames.Desc>Enabling this will allow multiple flames to inhabit the same tile. This is a cosmetic change, and mechanically it still works like one flame.</ScatteredFlames.Settings.MultiFlames.Desc>
