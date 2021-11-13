@@ -18,18 +18,27 @@ namespace ScatteredFlames
 		public static void Setup()
 		{
 			fastRandom = new FastRandom();
-			var fire = DefDatabase<ThingDef>.GetNamed("Fire");
-
-            smokeInstalled = LoadedModManager.RunningMods.Any(x => x.Name == "Simple FX: Smoke");
+			smokeInstalled = LoadedModManager.RunningMods.Any(x => x.Name == "Simple FX: Smoke");
+			ThingDef fire = DefDatabase<ThingDef>.GetNamed("Fire");
+			if (fire == null)
+			{
+				Log.Warning("[Scattered Flames] Vanilla fire definition not found.");
+				return;
+			}
 
 			//Remove smoke extension?
 			bool restartNeeded = false;
 			if (!smoke)
 			{
-				backup = fire.modExtensions.FirstOrDefault(x => x.GetType().Name == "Flecker");
+				backup = fire.modExtensions?.FirstOrDefault(x => x.GetType().Name == "Flecker");
 				if (backup != null && fire.modExtensions.Remove(backup)) restartNeeded = true;
 			}
-			else if (fire.modExtensions.FirstOrDefault(x => x.GetType().Name == "Flecker") == null && backup != null)
+			else if (fire.modExtensions == null && backup != null)
+			{
+				fire.modExtensions = new List<DefModExtension>();
+				fire.modExtensions.Add(backup);
+			}
+			else if (fire.modExtensions?.FirstOrDefault(x => x.GetType().Name == "Flecker") == null && backup != null)
 			{
 				fire.modExtensions.Add(backup);
 				restartNeeded = true;
