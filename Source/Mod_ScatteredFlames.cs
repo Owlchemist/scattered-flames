@@ -30,6 +30,7 @@ namespace ScatteredFlames
 				smoke = false;
 				options.CheckboxLabeled("ScatteredFlames.Settings.Smoke".Translate().Colorize(Color.gray), ref smoke, "ScatteredFlames.Settings.Smoke.Desc".Translate());
 			}
+			options.CheckboxLabeled("ScatteredFlames.Settings.OptimizeShadows".Translate(), ref optimizeShadows, "ScatteredFlames.Settings.OptimizeShadows.Desc".Translate());
 			options.Gap();
 			options.Label("ScatteredFlames.Settings.Header.Misc".Translate());
 			options.GapLine(); //======================================
@@ -57,6 +58,7 @@ namespace ScatteredFlames
 			Scribe_Values.Look<bool>(ref multiFlames, "multiFlames", true, false);
 			Scribe_Values.Look<bool>(ref specialFX, "specialFX", true, false);
 			Scribe_Values.Look<bool>(ref smoke, "smoke", true, false);
+			Scribe_Values.Look<bool>(ref optimizeShadows, "optimizeShadows", true, false);
 			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher", false, false);
 			base.ExposeData();
 		}
@@ -64,6 +66,7 @@ namespace ScatteredFlames
 		public static bool multiFlames = true;
 		public static bool smoke = true;
 		public static bool specialFX = true;
+		public static bool optimizeShadows = true;
 		public static bool disableFireWatcher = false;
 	}
 }

@@ -11,6 +11,9 @@
 	<ScatteredFlames.Settings.Smoke>Enable smoke</ScatteredFlames.Settings.Smoke>
 	<ScatteredFlames.Settings.Smoke.Desc>If Simple FX: Smoke is installed, enabling this will cause wild fires to emit smoke, which will respect the current wind speed and direction.</ScatteredFlames.Settings.Smoke.Desc>
 	
+	<ScatteredFlames.Settings.OptimizeShadows>Optimize shadows</ScatteredFlames.Settings.OptimizeShadows>
+	<ScatteredFlames.Settings.OptimizeShadows.Desc>When enabled, things that are currently on fire will not emit a shadow.</ScatteredFlames.Settings.OptimizeShadows.Desc>
+	
 	<ScatteredFlames.Settings.FireWatcher>Disable fire watcher</ScatteredFlames.Settings.FireWatcher>
 	<ScatteredFlames.Settings.FireWatcher.Desc>Normally, if a wild fire spirals out of control long enough, the storyteller will summon rain. You can disable this feature here.</ScatteredFlames.Settings.FireWatcher.Desc>
 	

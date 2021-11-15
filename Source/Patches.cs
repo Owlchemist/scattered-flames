@@ -1,6 +1,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using UnityEngine;
 using static ScatteredFlames.ScatteredFlamesUtility;
 using static ScatteredFlames.ModSettings_ScatteredFlames;
 
@@ -12,6 +13,7 @@ namespace ScatteredFlames
         static void Postfix(Fire __instance)
         {
 			fireCache.Add(__instance, new FlameData(__instance));
+            burningCache.Add(__instance.Position);
         }
     }
 
@@ -21,6 +23,7 @@ namespace ScatteredFlames
         static void Prefix(Fire __instance)
         {
             fireCache.Remove(__instance);
+            burningCache.Remove(__instance.Position);
         }
     }
 
@@ -42,6 +45,7 @@ namespace ScatteredFlames
         static void Prefix()
         {
             fireCache.Clear();
+            burningCache.Clear();
         }
     }
 
@@ -51,6 +55,7 @@ namespace ScatteredFlames
         static void Prefix()
         {
             fireCache.Clear();
+            burningCache.Clear();
         }
     }
 
@@ -60,6 +65,21 @@ namespace ScatteredFlames
         static bool Prefix()
         {
             return !disableFireWatcher;
+        }
+    }
+
+    [HarmonyPatch (typeof(Printer_Shadow), nameof(Printer_Shadow.PrintShadow), new System.Type[]
+    { 
+        typeof(SectionLayer),
+        typeof(Vector3),
+        typeof(Vector3),
+        typeof(Rot4)
+    })]
+    static class Patch_PrintShadow
+    {
+        static bool Prefix(Vector3 center)
+        {
+            return !(optimizeShadows && burningCache.Count > 0 && burningCache.Contains(center.ToIntVec3()));
         }
     }
 }
