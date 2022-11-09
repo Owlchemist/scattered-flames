@@ -9,13 +9,14 @@ namespace ScatteredFlames
 {
 	public static class ScatteredFlamesUtility
 	{
-		public static Dictionary<Thing, FlameData> fireCache = new Dictionary<Thing, FlameData>();
+		public static Dictionary<int, FlameData> fireCache = new Dictionary<int, FlameData>();
 		public static HashSet<IntVec3> burningCache = new HashSet<IntVec3>();
 		public static bool nextFrame, flickerNow, smokeInstalled;
 		private static Vector3 centering = new Vector3(0.5f, 0, 0.5f);
 		static DefModExtension backup;
 		public static FastRandom fastRandom;
-
+		public static bool isPausedCache;
+		public static int frameID, triggeringFrameID;
 		public static void Setup()
 		{
 			fastRandom = new FastRandom();

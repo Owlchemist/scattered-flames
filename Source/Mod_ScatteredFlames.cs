@@ -35,6 +35,7 @@ namespace ScatteredFlames
 			options.Label("ScatteredFlames.Settings.Header.Misc".Translate());
 			options.GapLine(); //======================================
 			options.CheckboxLabeled("ScatteredFlames.Settings.FireWatcher".Translate(), ref disableFireWatcher, "ScatteredFlames.Settings.FireWatcher.Desc".Translate());
+			options.CheckboxLabeled("ScatteredFlames.Settings.IgniteGizmo".Translate(), ref enableIgniteGizmo, "ScatteredFlames.Settings.IgniteGizmo.Desc".Translate());
 			options.End();
 			base.DoSettingsWindowContents(inRect);
 		}
@@ -60,6 +61,7 @@ namespace ScatteredFlames
 			Scribe_Values.Look<bool>(ref smoke, "smoke", true, false);
 			Scribe_Values.Look<bool>(ref optimizeShadows, "optimizeShadows", true, false);
 			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher", false, false);
+			Scribe_Values.Look<bool>(ref enableIgniteGizmo, "enableIgniteGizmo", false, false);
 			base.ExposeData();
 		}
 
@@ -68,5 +70,6 @@ namespace ScatteredFlames
 		public static bool specialFX = true;
 		public static bool optimizeShadows = true;
 		public static bool disableFireWatcher = false;
+		public static bool enableIgniteGizmo = false;
 	}
 }

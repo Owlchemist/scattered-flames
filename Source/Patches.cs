@@ -2,6 +2,7 @@ using HarmonyLib;
 using RimWorld;
 using Verse;
 using UnityEngine;
+using RimWorld.Planet;
 using static ScatteredFlames.ScatteredFlamesUtility;
 using static ScatteredFlames.ModSettings_ScatteredFlames;
 
@@ -12,8 +13,12 @@ namespace ScatteredFlames
     {
         static void Postfix(Fire __instance)
         {
-			fireCache.Add(__instance, new FlameData(__instance));
-            burningCache.Add(__instance.Position);
+            if (__instance.parent is Pawn) __instance.graphicInt = ResourceBank.FireGraphic;
+            else
+            {
+                fireCache.Add(__instance.thingIDNumber, new FlameData(__instance));
+                burningCache.Add(__instance.Position);
+            }
         }
     }
 
@@ -22,20 +27,35 @@ namespace ScatteredFlames
     {
         static void Prefix(Fire __instance)
         {
-            fireCache.Remove(__instance);
+            fireCache.Remove(__instance.thingIDNumber);
             burningCache.Remove(__instance.Position);
         }
     }
 
-    [HarmonyPatch (typeof(GameComponentUtility), nameof(GameComponentUtility.GameComponentUpdate))]
+    [HarmonyPatch (typeof(GameComponent), nameof(GameComponent.GameComponentUpdate))]
     static class Patch_GameComponentUpdate
+    {
+        static void Prefix()
+        {
+            ++frameID;
+            if (frameID == int.MaxValue) frameID = 0;
+        }
+    }
+
+    [HarmonyPatch (typeof(World), nameof(World.WorldTick))]
+    static class Patch_WorldTick
     {
         static int ticker;
         static void Prefix()
         {
             ticker += 1 * (int)Current.gameInt.tickManager.curTimeSpeed;
             
-            if (nextFrame = ticker >= 15) ticker = 0;
+            if (nextFrame = ticker >= 14)
+            {
+                ticker = 0;
+                triggeringFrameID = frameID;
+            }
+            if (Current.ProgramState == ProgramState.Playing) isPausedCache = Current.gameInt.tickManager.Paused;
         }
     }
 
