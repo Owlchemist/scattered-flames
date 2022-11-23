@@ -18,6 +18,7 @@ namespace ScatteredFlames
             {
                 fireCache.Add(__instance.thingIDNumber, new FlameData(__instance));
                 burningCache.Add(__instance.Position);
+                somethingBurning = true;
             }
         }
     }
@@ -29,6 +30,7 @@ namespace ScatteredFlames
         {
             fireCache.Remove(__instance.thingIDNumber);
             burningCache.Remove(__instance.Position);
+            if (burningCache.Count > 0) somethingBurning = false;
         }
     }
 
@@ -66,6 +68,7 @@ namespace ScatteredFlames
         {
             fireCache.Clear();
             burningCache.Clear();
+            somethingBurning = false;
         }
     }
 
@@ -76,6 +79,7 @@ namespace ScatteredFlames
         {
             fireCache.Clear();
             burningCache.Clear();
+            somethingBurning = false;
         }
     }
 
@@ -99,7 +103,7 @@ namespace ScatteredFlames
     {
         static bool Prefix(Vector3 center)
         {
-            return !(optimizeShadows && burningCache.Count > 0 && burningCache.Contains(center.ToIntVec3()));
+            return !(optimizeShadows && somethingBurning && burningCache.Contains(center.ToIntVec3()));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ScatteredFlames
 	{
 		public static Dictionary<int, FlameData> fireCache = new Dictionary<int, FlameData>();
 		public static HashSet<IntVec3> burningCache = new HashSet<IntVec3>();
-		public static bool nextFrame, flickerNow, smokeInstalled;
+		public static bool nextFrame, flickerNow, smokeInstalled, somethingBurning;
 		private static Vector3 centering = new Vector3(0.5f, 0, 0.5f);
 		static DefModExtension backup;
 		public static FastRandom fastRandom;
@@ -21,6 +21,7 @@ namespace ScatteredFlames
 		{
 			fastRandom = new FastRandom();
 			smokeInstalled = LoadedModManager.RunningMods.Any(x => x.Name == "Simple FX: Smoke");
+			if (Prefs.DevMode && smokeInstalled) Log.Message("[Scattered Flames] Integrated with Simple FX: Smoke.");
 			ThingDef fire = DefDatabase<ThingDef>.GetNamed("Fire");
 			if (fire == null)
 			{
@@ -106,7 +107,7 @@ namespace ScatteredFlames
 
 			FleckCreationData dataStatic = FleckMaker.GetDataStatic(vector, map, ResourceBank.FleckDefOf.Owl_LongFireGlow, fastRandom.Next(400, 600) / 100f * size);
 			dataStatic.rotationRate = fastRandom.Next(-300, 300) / 100f;
-			dataStatic.velocityAngle = fastRandom.Next(0, 360) / 100f;
+			dataStatic.velocityAngle = fastRandom.Next(360) / 100f;
 			dataStatic.velocitySpeed = 0.12f;
 			dataStatic.def.graphicData.color *= 0.5f;
 			map.flecks.CreateFleck(dataStatic);

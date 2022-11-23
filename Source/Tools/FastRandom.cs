@@ -127,5 +127,32 @@ namespace ScatteredFlames
 			// a little more performance.
 			return lowerBound+(int)((REAL_UNIT_INT*(double)(int)(0x7FFFFFFF&(w=(w^(w>>19))^(t^(t>>8)))))*(double)range);
 		}
+
+		// Buffer 32 bits in bitBuffer, return 1 at a time, keep track of how many have been returned
+		// with bitBufferIdx.
+		uint bitBuffer;
+		uint bitMask=1;
+		/// <summary>
+		/// Generates a single random bit.
+		/// This method's performance is improved by generating 32 bits in one operation and storing them
+		/// ready for future calls.
+		/// </summary>
+		/// <returns></returns>
+		public bool NextBool()
+		{
+			if(bitMask==1)
+			{	
+				// Generate 32 more bits.
+				uint t=(x^(x<<11));
+				x=y; y=z; z=w;
+				bitBuffer=w=(w^(w>>19))^(t^(t>>8));
+
+				// Reset the bitMask that tells us which bit to read next.
+				bitMask = 0x80000000;
+				return (bitBuffer & bitMask)==0;
+			}
+
+			return (bitBuffer & (bitMask>>=1))==0;
+		}
 	}
 }

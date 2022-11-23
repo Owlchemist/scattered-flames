@@ -8,9 +8,7 @@ namespace ScatteredFlames
 {
 	public class Graphic_FlickerMulti : Graphic_Flicker
 	{
-		public Graphic_FlickerMulti()
-		{
-		}
+		public Graphic_FlickerMulti() {}
 
 		public override void DrawWorker(Vector3 loc, Rot4 rot, ThingDef thingDef, Thing thing, float extraRotation)
 		{
@@ -26,12 +24,12 @@ namespace ScatteredFlames
 					{
 						subFlame.matrix[i].m00 = subFlame.matrix[i].m22 = Mathf.Min(subFlame.maxFireSize, fireSize) * fastRandom.Next(90,110) / 100f;
 					}
-					if (ModSettings_ScatteredFlames.specialFX && !subFlame.roofed && fireSize > 0.5f)
+					if (ModSettings_ScatteredFlames.specialFX && !subFlame.roofed && fireSize > 0.5f && fastRandom.NextBool())
 					{
-						if (fastRandom.Next(5) < 1) FleckMaker.ThrowMicroSparks(loc, thing.Map);
-						if (fireSize > 0.75f && fastRandom.Next(35) < 1) ThrowLongFireGlow(loc, thing.Map, fireSize);
-						if (fastRandom.Next(60) < 1) FleckMaker.ThrowHeatGlow(thing.Position, thing.Map, fireSize);
-						if (fastRandom.Next(10) < 1) FleckMaker.ThrowDustPuffThick(loc, thing.Map, fireSize * 2f, ResourceBank.color);
+						if (fastRandom.Next(3) == 0) FleckMaker.ThrowMicroSparks(loc, thing.Map);
+						if (fireSize > 0.75f && fastRandom.Next(18) < 1) ThrowLongFireGlow(loc, thing.Map, fireSize);
+						if (fastRandom.Next(30) == 0) FleckMaker.ThrowHeatGlow(thing.Position, thing.Map, fireSize);
+						if (fastRandom.Next(5) == 0) FleckMaker.ThrowDustPuffThick(loc, thing.Map, fireSize * 2f, ResourceBank.color);
 					}
 				}
 			}
