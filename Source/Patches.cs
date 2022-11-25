@@ -13,7 +13,7 @@ namespace ScatteredFlames
     {
         static void Postfix(Fire __instance)
         {
-            if (__instance.parent is Pawn) __instance.graphicInt = ResourceBank.FireGraphic;
+            if (__instance.parent?.def.category == ThingCategory.Pawn) __instance.graphicInt = ResourceBank.FireGraphic;
             else
             {
                 fireCache.Add(__instance.thingIDNumber, new FlameData(__instance));
@@ -30,17 +30,7 @@ namespace ScatteredFlames
         {
             fireCache.Remove(__instance.thingIDNumber);
             burningCache.Remove(__instance.Position);
-            if (burningCache.Count > 0) somethingBurning = false;
-        }
-    }
-
-    [HarmonyPatch (typeof(GameComponent), nameof(GameComponent.GameComponentUpdate))]
-    static class Patch_GameComponentUpdate
-    {
-        static void Prefix()
-        {
-            ++frameID;
-            if (frameID == int.MaxValue) frameID = 0;
+            somethingBurning = burningCache.Count > 0;
         }
     }
 
@@ -55,7 +45,7 @@ namespace ScatteredFlames
             if (nextFrame = ticker >= 14)
             {
                 ticker = 0;
-                triggeringFrameID = frameID;
+                triggeringFrameID = RealTime.frameCount;
             }
             if (Current.ProgramState == ProgramState.Playing) isPausedCache = Current.gameInt.tickManager.Paused;
         }
@@ -86,6 +76,12 @@ namespace ScatteredFlames
     [HarmonyPatch (typeof(FireWatcher), nameof(FireWatcher.FireWatcherTick))]
     static class Patch_FireWatcherTick
     {
+        /*
+        static bool Prepare()
+        {
+            return disableFireWatcher;
+        }
+        */
         static bool Prefix()
         {
             return !disableFireWatcher;

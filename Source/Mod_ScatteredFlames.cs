@@ -56,20 +56,15 @@ namespace ScatteredFlames
 	{
 		public override void ExposeData()
 		{
-			Scribe_Values.Look<bool>(ref multiFlames, "multiFlames", true, false);
-			Scribe_Values.Look<bool>(ref specialFX, "specialFX", true, false);
-			Scribe_Values.Look<bool>(ref smoke, "smoke", true, false);
-			Scribe_Values.Look<bool>(ref optimizeShadows, "optimizeShadows", true, false);
-			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher", false, false);
-			Scribe_Values.Look<bool>(ref enableIgniteGizmo, "enableIgniteGizmo", false, false);
+			Scribe_Values.Look<bool>(ref multiFlames, "multiFlames", true);
+			Scribe_Values.Look<bool>(ref specialFX, "specialFX", true);
+			Scribe_Values.Look<bool>(ref smoke, "smoke", true);
+			Scribe_Values.Look<bool>(ref optimizeShadows, "optimizeShadows", true);
+			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher");
+			Scribe_Values.Look<bool>(ref enableIgniteGizmo, "enableIgniteGizmo");
 			base.ExposeData();
 		}
 
-		public static bool multiFlames = true;
-		public static bool smoke = true;
-		public static bool specialFX = true;
-		public static bool optimizeShadows = true;
-		public static bool disableFireWatcher = false;
-		public static bool enableIgniteGizmo = false;
+		public static bool disableFireWatcher, enableIgniteGizmo, multiFlames = true, smoke = true, specialFX = true, optimizeShadows = true;
 	}
 }

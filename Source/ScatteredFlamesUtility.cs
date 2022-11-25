@@ -16,7 +16,7 @@ namespace ScatteredFlames
 		static DefModExtension backup;
 		public static FastRandom fastRandom;
 		public static bool isPausedCache;
-		public static int frameID, triggeringFrameID;
+		public static int triggeringFrameID;
 		public static void Setup()
 		{
 			fastRandom = new FastRandom();
@@ -58,6 +58,7 @@ namespace ScatteredFlames
 		{
 			public FlameData(Fire fire)
 			{
+				this.fire = fire;
 				//Determine starting frame
 				frame = fastRandom.Next(0,3);
 
@@ -90,6 +91,7 @@ namespace ScatteredFlames
 				roofed = fire.Map.roofGrid.Roofed(fire.Position);
 			}
 			
+			public Fire fire;
 			public int frame;
 			public Vector3[] offsets;
 			public int numOfOffsets;
