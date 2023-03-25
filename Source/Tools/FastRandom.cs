@@ -57,16 +57,6 @@ namespace ScatteredFlames
 			Reinitialise((int)Environment.TickCount);
 		}
 
-		/// <summary>
-		/// Initialises a new instance using an int value as seed.
-		/// This constructor signature is provided to maintain compatibility with
-		/// System.Random
-		/// </summary>
-		public FastRandom(int seed)
-		{
-			Reinitialise(seed);
-		}
-
 		#endregion
 
 		#region Public Methods [Reinitialisation]

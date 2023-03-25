@@ -34,57 +34,38 @@ namespace ScatteredFlames
         }
     }
 
-    [HarmonyPatch (typeof(World), nameof(World.WorldTick))]
-    static class Patch_WorldTick
-    {
-        static int ticker;
-        static void Prefix()
-        {
-            ticker += 1 * (int)Current.gameInt.tickManager.curTimeSpeed;
-            
-            if (nextFrame = ticker >= 14)
-            {
-                ticker = 0;
-                triggeringFrameID = RealTime.frameCount;
-            }
-            if (Current.ProgramState == ProgramState.Playing) isPausedCache = Current.gameInt.tickManager.Paused;
-        }
-    }
-
-	[HarmonyPatch (typeof(Game), nameof(Game.LoadGame))]
-    static class Patch_LoadGame
+	[HarmonyPatch (typeof(World), nameof(World.FinalizeInit))]
+    static class Patch_World_FinalizeInit
     {
         static void Prefix()
         {
-            fireCache.Clear();
-            burningCache.Clear();
+            fireCache = new System.Collections.Generic.Dictionary<int, FlameData>();
+            burningCache = new System.Collections.Generic.HashSet<IntVec3>();
             somethingBurning = false;
         }
     }
 
-	[HarmonyPatch (typeof(Game), nameof(Game.InitNewGame))]
-    static class Patch_InitNewGame
+    [HarmonyPatch (typeof(FireWatcher), nameof(FireWatcher.UpdateObservations))]
+    static class Patch_FireWatcher_UpdateObservations
     {
-        static void Prefix()
-        {
-            fireCache.Clear();
-            burningCache.Clear();
-            somethingBurning = false;
-        }
-    }
-
-    [HarmonyPatch (typeof(FireWatcher), nameof(FireWatcher.FireWatcherTick))]
-    static class Patch_FireWatcherTick
-    {
-        /*
-        static bool Prepare()
-        {
-            return disableFireWatcher;
-        }
-        */
         static bool Prefix()
         {
             return !disableFireWatcher;
+        }
+    }
+
+
+    [HarmonyPatch (typeof(TickManager), nameof(TickManager.DoSingleTick))]
+    static class Patch_TickManager_DoSingleTick
+    {
+        static void Postfix()
+        {            
+            var tickManager = Current.gameInt.tickManager;
+            curTimeSpeed = (int)tickManager.curTimeSpeed;
+            if (nextFrame = (tickManager.ticksGameInt % 15) * curTimeSpeed >= 14)
+            {
+                triggeringFrameID = RealTime.frameCount;
+            }
         }
     }
 

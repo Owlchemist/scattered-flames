@@ -11,7 +11,6 @@ namespace ScatteredFlames
 		{
 			new Harmony(this.Content.PackageIdPlayerFacing).PatchAll();
 			base.GetSettings<ModSettings_ScatteredFlames>();
-			LongEventHandler.QueueLongEvent(() => ScatteredFlamesUtility.Setup(), null, false, null);
 		}
 
 		public override void DoSettingsWindowContents(Rect inRect)
@@ -56,12 +55,12 @@ namespace ScatteredFlames
 	{
 		public override void ExposeData()
 		{
-			Scribe_Values.Look<bool>(ref multiFlames, "multiFlames", true);
-			Scribe_Values.Look<bool>(ref specialFX, "specialFX", true);
-			Scribe_Values.Look<bool>(ref smoke, "smoke", true);
-			Scribe_Values.Look<bool>(ref optimizeShadows, "optimizeShadows", true);
-			Scribe_Values.Look<bool>(ref disableFireWatcher, "disableFireWatcher");
-			Scribe_Values.Look<bool>(ref enableIgniteGizmo, "enableIgniteGizmo");
+			Scribe_Values.Look(ref multiFlames, "multiFlames", true);
+			Scribe_Values.Look(ref specialFX, "specialFX", true);
+			Scribe_Values.Look(ref smoke, "smoke", true);
+			Scribe_Values.Look(ref optimizeShadows, "optimizeShadows", true);
+			Scribe_Values.Look(ref disableFireWatcher, "disableFireWatcher");
+			Scribe_Values.Look(ref enableIgniteGizmo, "enableIgniteGizmo");
 			base.ExposeData();
 		}
 

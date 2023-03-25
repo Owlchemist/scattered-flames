@@ -7,22 +7,26 @@ using static ScatteredFlames.ModSettings_ScatteredFlames;
 
 namespace ScatteredFlames
 {
+	[StaticConstructorOnStartup]
 	public static class ScatteredFlamesUtility
 	{
 		public static Dictionary<int, FlameData> fireCache = new Dictionary<int, FlameData>();
 		public static HashSet<IntVec3> burningCache = new HashSet<IntVec3>();
-		public static bool nextFrame, flickerNow, smokeInstalled, somethingBurning;
-		private static Vector3 centering = new Vector3(0.5f, 0, 0.5f);
+		public static bool nextFrame, smokeInstalled, somethingBurning;
+		public static int triggeringFrameID, curTimeSpeed;
 		static DefModExtension backup;
 		public static FastRandom fastRandom;
-		public static bool isPausedCache;
-		public static int triggeringFrameID;
+		static ScatteredFlamesUtility()
+		{
+			Setup();
+		}
+
 		public static void Setup()
 		{
 			fastRandom = new FastRandom();
 			smokeInstalled = LoadedModManager.RunningMods.Any(x => x.Name == "Simple FX: Smoke");
 			if (Prefs.DevMode && smokeInstalled) Log.Message("[Scattered Flames] Integrated with Simple FX: Smoke.");
-			ThingDef fire = DefDatabase<ThingDef>.GetNamed("Fire");
+			ThingDef fire = ThingDefOf.Fire;
 			if (fire == null)
 			{
 				Log.Warning("[Scattered Flames] Vanilla fire definition not found.");
@@ -81,23 +85,26 @@ namespace ScatteredFlames
 
 				//Cache matrix and compensate offsets
 				matrix = new Matrix4x4[numOfOffsets];
-				for (int i = 0; i < numOfOffsets; ++i)
+				for (int i = numOfOffsets; i-- > 0;)
 				{
-					offsets[i] += fire.Position.ToVector3() + centering;
+					offsets[i] += fire.Position.ToVector3() + new Vector3(0.5f, 0, 0.5f);
 					matrix[i].SetTRS(new Vector3(offsets[i].x, fire.Position.ToVector3ShiftedWithAltitude(AltitudeLayer.PawnState).y, offsets[i].z), Quaternion.identity, new Vector3(fire.fireSize, 1f, fire.fireSize));
 				}
 
 				//Roofed?
 				roofed = fire.Map.roofGrid.Roofed(fire.Position);
+
+				//Hash offset
+				hashOffset = fastRandom.Next(10);
 			}
 			
 			public Fire fire;
-			public int frame;
+			public int frame, numOfOffsets;
 			public Vector3[] offsets;
-			public int numOfOffsets;
 			public Matrix4x4[] matrix;
 			public float maxFireSize;
 			public bool roofed;
+			public int hashOffset;
 		}
 	
 		public static void ThrowLongFireGlow(Vector3 c, Map map, float size)
